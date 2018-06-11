@@ -3,7 +3,7 @@
     <h1 class="header-title">nodejs</h1>
     <nav>
       <ul class="header-nav">
-        <router-link tag="li" :to="{name:'Home',params:{tab:''}}">全部</router-link>
+        <router-link tag="li" :to="{name:'Home',params:{tab:'all'}}">全部</router-link>
         <router-link tag="li" :to="{name:'Home',params:{tab:'good'}}">精华</router-link>
         <router-link tag="li" :to="{name:'Home',params:{tab:'share'}}">分享</router-link>
         <router-link tag="li" :to="{name:'Home',params:{tab:'ask'}}">问答</router-link>

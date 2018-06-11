@@ -33,113 +33,38 @@
            </li>
         </ul>
       </div>
-       <yd-tab active-color='#333' class="user-tab">
-        <yd-tab-panel label="发布">
-          <router-link v-if="user.recent_replies.length" tag="div" :to="{name:'detail',params:{id:item.id}}"  v-for="(item,index) in user.recent_topics" :key="index">
-          <div class="article-item">
-              <img class="article-item-img" :src="item.author.avatar_url">
-              <div class="article-item-detail">
-                  <h3>{{item.title}}</h3>
-                  <div class="article-item-info">
-                      <div class="time">{{item.create_at|dateDistance}}</div>
-                      <div class="writer">
-                        <svg class="icon" aria-hidden="true">
-                          <use xlink:href="#icon-bi"></use>
-                        </svg>
-                        {{item.author.loginname}}
-                      </div>
-                  </div>
-                  <div class="article-item-info">
-                      <div class="time">{{item.last_reply_at|dateDistance}}</div>
-                      <div class="browse">
-                        <svg class="icon" aria-hidden="true">
-                          <use xlink:href="#icon-browse"></use>
-                        </svg>
-                        {{item.visit_count}}
-                      </div>
-                  </div>
-              </div>
-            </div>
-          </router-link>
-          <div v-else>暂无数据</div>
-        </yd-tab-panel>
-        <yd-tab-panel label="回复">
-            <router-link v-if="user.recent_replies.length" tag="div" :to="{name:'detail',params:{id:item.id}}"  v-for="(item,index) in user.recent_replies" :key="index">
-            <div class="article-item">
-                <img class="article-item-img" :src="item.author.avatar_url">
-                <div class="article-item-detail">
-                    <h3>{{item.title}}</h3>
-                    <div class="article-item-info">
-                        <div class="time">{{item.create_at|dateDistance}}</div>
-                        <div class="writer">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-bi"></use>
-                          </svg>
-                          {{item.author.loginname}}
-                        </div>
-                    </div>
-                    <div class="article-item-info">
-                        <div class="time">{{item.last_reply_at|dateDistance}}</div>
-                        <div class="browse">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-browse"></use>
-                          </svg>
-                          {{item.visit_count}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </router-link>
+      <keep-alive>
+        <yd-tab active-color='#333' class="user-tab">
+          <yd-tab-panel label="发布">
+            <news-item v-if="user.recent_replies.length" v-for="(item,index) in user.recent_topics" :item="item" :hideTag="true" :key="index"></news-item>
             <div v-else>暂无数据</div>
-        </yd-tab-panel>
-        <yd-tab-panel label="收藏">
-            <router-link  v-if="collect.length" tag="div" :to="{name:'detail',params:{id:item.id}}"  v-for="(item,index) in collect" :key="index">
-            <div class="article-item">
-                <img class="article-item-img" :src="item.author.avatar_url">
-                <div class="article-item-detail">
-                    <h3>
-                      <span class="put-top" v-if="item.top || item.good">
-                        {{item.top ? '置顶':'精华'}}
-                      </span>
-                      <span class="put-top" v-else>{{tabTag[item.tab]}}</span>
-                      {{item.title}}
-                    </h3>
-                    <div class="article-item-info">
-                        <div class="time">{{item.create_at|dateDistance}}</div>
-                        <div class="writer">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-bi"></use>
-                          </svg>
-                          {{item.author.loginname}}
-                        </div>
-                    </div>
-                    <div class="article-item-info">
-                        <div class="time">{{item.last_reply_at|dateDistance}}</div>
-                        <div class="browse">
-                          <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-browse"></use>
-                          </svg>
-                          {{item.visit_count}}
-                        </div>
-                    </div>
-                </div>
-              </div>
-            </router-link>
-            <div v-else>暂无数据</div>
-        </yd-tab-panel>
-    </yd-tab>
+          </yd-tab-panel>
+          <yd-tab-panel label="回复">
+              <news-item v-if="user.recent_replies.length" v-for="(item,index) in user.recent_replies" :item="item" :hideTag="true" :key="index"></news-item>
+              <div v-else>暂无数据</div>
+          </yd-tab-panel>
+          <yd-tab-panel label="收藏">
+              <news-item v-if="collect.length" v-for="(item,index) in collect" :item="item" :key="index"></news-item>
+              <div v-else>暂无数据</div>
+          </yd-tab-panel>
+        </yd-tab>
+      </keep-alive>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import newsItem from '../components/news-item'
 export default {
   data() {
     return {
       user: {},
       collect: []
     }
+  },
+  components: {
+    newsItem
   },
   computed: mapState({
     loginname: state => state.user.loginname

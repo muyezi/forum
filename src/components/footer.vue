@@ -38,9 +38,7 @@ import { mapState } from 'vuex'
 export default {
   name: 'fixFooter',
   computed: mapState(['hasnotReadNum']),
-  created() {
-    console.log(this.hasnotReadNum)
-  }
+  created() {}
 }
 </script>
 

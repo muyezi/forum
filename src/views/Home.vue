@@ -1,40 +1,9 @@
 <template>
   <div class="content">
-    <!-- <loading :show="true"></loading> -->
+    <loading :show="isLoading"></loading>
     <div class="loadmore-wrap"  ref="loadmore">
         <div class="article-item-wrap">
-          <router-link tag="div" :to="{name:'detail',params:{id:item.id}}" v-for="(item,index) in list" :key="index">
-            <div class="article-item">
-              <img class="article-item-img" :src="item.author.avatar_url">
-              <div class="article-item-detail">
-                  <h3>
-                    <span class="put-top" v-if="item.top || item.good">
-                      {{item.top ? '置顶':'精华'}}
-                    </span>
-                    <span class="put-top put-tag" v-else>{{tabTag[item.tab]}}</span>
-                    {{item.title}}
-                  </h3>
-                  <div class="article-item-info">
-                      <div class="time">{{item.create_at|dateDistance}}</div>
-                      <div class="writer">
-                        <svg class="icon" aria-hidden="true">
-                          <use xlink:href="#icon-bi"></use>
-                        </svg>
-                        {{item.author.loginname}}
-                      </div>
-                  </div>
-                  <div class="article-item-info">
-                      <div class="time">{{item.last_reply_at|dateDistance}}</div>
-                      <div class="browse">
-                        <svg class="icon" aria-hidden="true">
-                          <use xlink:href="#icon-browse"></use>
-                        </svg>
-                        {{item.visit_count}}
-                      </div>
-                  </div>
-              </div>
-            </div>
-          </router-link>
+          <news-item v-for="(item,index) in list" :item="item" :key="index"></news-item>
         </div>
     </div>
   </div>
@@ -43,6 +12,7 @@
 <script>
 import loading from '../components/loading/loading.vue'
 import BScroll from 'better-scroll'
+import newsItem from '../components/news-item'
 export default {
   name: 'home',
   data() {
@@ -50,15 +20,16 @@ export default {
       list: [],
       pagenum: 1,
       pagesize: 10,
-      tab: this.$route.params.tab || 'all'
+      tab: this.$route.params.tab || 'all',
+      isLoading: false
     }
   },
   components: {
-    loading
+    loading,
+    newsItem
   },
   mounted() {
     this.initShow()
-    console.log(this.tabTag)
   },
   methods: {
     initShow(isRefresh) {
@@ -68,7 +39,8 @@ export default {
         })
         .then(res => {
           if (isRefresh) {
-            this.$spin.hide()
+            // this.$spin.hide()
+            this.isLoading = false
             this.list = res
           } else {
             this.list = this.list.concat(res)
@@ -77,10 +49,12 @@ export default {
             if (!this.scroll) {
               this.scroll = new BScroll(this.$refs.loadmore, { click: true })
               this.scroll.on('scrollStart', pos => {
-                // console.log('开')
+                console.log(pos)
                 // this.$spin.show()
+                this.isLoading = true
               })
               this.scroll.on('touchEnd', pos => {
+                this.isLoading = false
                 // 上拉加载
                 if (pos.y < -50) {
                   this.pagenum++
@@ -99,8 +73,7 @@ export default {
     },
     changeTab() {
       this.tab = this.$route.params.tab
-      // this.list = []
-      this.initShow()
+      this.initShow(true)
     }
   },
   watch: {

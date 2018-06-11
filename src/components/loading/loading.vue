@@ -25,12 +25,9 @@
 <script>
 export default {
   props: {
-    show: Boolean,
-    text: {
-      type: String,
-      default: '正在加载中...'
-    }
-  }
+    show: Boolean
+  },
+  methods: {}
 }
 </script>
 <style>

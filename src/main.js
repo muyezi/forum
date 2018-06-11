@@ -42,6 +42,7 @@ import {
 } from 'iview'
 Vue.component(Spin.name, Spin)
 
+
 // Vue.config.productionTip = false
 Vue.prototype.$http = http
 Vue.prototype.$spin = Spin

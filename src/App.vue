@@ -1,13 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <vheader v-if="$route.name==='Home'"></vheader>
+    <vheaderTop v-else></vheaderTop>
     <router-view/>
+    <vfooter v-if="!$route.meta.hideFooter"></vfooter>
   </div>
 </template>
+<script>
+// @ is an alias to /src
+import vheader from '@/components/header.vue'
+import vheaderTop from '@/components/header-top.vue'
+import vfooter from '@/components/footer.vue'
 
+export default {
+  name: 'home',
+  components: {
+    vheader,
+    vheaderTop,
+    vfooter
+  },
+  data() {
+    return {
+      arr: [1, 2, 3]
+    }
+  }
+}
+</script>
 <style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

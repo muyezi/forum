@@ -7,7 +7,7 @@ import {
 
 // 创建实例时设置配置的默认值
 const http = axios.create({
-  baseURL: '/'
+  baseURL: 'https://cnodejs.org/api/v1'
 });
 
 // 添加请求拦截器

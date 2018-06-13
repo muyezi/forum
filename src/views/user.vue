@@ -86,7 +86,7 @@ export default {
         opts: () => {
           this.$store.commit('clearUser')
           this.$store.commit('clearMsgReadNum')
-          this.$router.push({ name: 'Home', params: { tab: '' } })
+          this.$router.push({ path: '/index/all' })
         }
       })
     }

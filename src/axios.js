@@ -42,13 +42,16 @@ http.interceptors.response.use(function (response) {
     // 对响应错误做点什么
     if (error.response) {
       var err_msg = error.response.data.error_msg
+      console.log(err_msg)
       if (error.response.status === 401) {
-        // router.replace({
-        //   name: 'login',
-        //   query: {
-        //     redirect: router.currentRoute.fullPath
-        //   }
-        // });
+        if (router.currentRoute.name != 'Home' && router.currentRoute.name != 'detail') {
+          router.replace({
+            name: 'login',
+            query: {
+              redirect: router.currentRoute.fullPath
+            }
+          });
+        }
       } else {
         Toast({
           mes: err_msg,

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { setCookie } from '../until'
+import { mapState } from '../store'
 export default {
   data() {
     return {
@@ -20,7 +20,7 @@ export default {
       isDisabled: false
     }
   },
-  created() {},
+  // computed: mapState(['accesstoken']),
   methods: {
     submit() {
       console.log(this.$route.query.redirect)
@@ -42,11 +42,13 @@ export default {
           localStorage.setItem('user', JSON.stringify(res))
           localStorage.setItem('accesstoken', this.userToken)
           // console.log(this.route.query.redirect)
-
           this.$store.commit('setUser')
           this.$store.dispatch('getMsg')
-          // this.$router.push({ path: '/user' })
-          this.$router.push({ path: this.$route.query.redirect })
+          if (this.$route.query.redirect) {
+            this.$router.replace({ path: this.$route.query.redirect })
+          } else {
+            this.$router.push({ path: '/user' })
+          }
         })
         .catch(() => {
           this.isDisabled = false

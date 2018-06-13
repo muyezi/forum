@@ -12,9 +12,7 @@ Vue.use(Router)
 const router = new Router({
   routes: [{
       path: '/',
-      redirect: {
-        path: '/index/all'
-      }
+      redirect: '/index/all'
     },
     {
       path: '/index/:tab',
@@ -78,7 +76,17 @@ router.beforeEach((to, from, next) => {
   let TOKEN = localStorage.getItem('accesstoken')
   if (to.meta.needLogin) { // 判断该路由是否需要登录权限
     if (TOKEN) { // 通过vuex state获取当前的token是否存在
-      next()
+      console.log('login', router.currentRoute)
+      if (router.currentRoute.name === login) {
+        next({
+          path: '/home',
+          query: {
+            redirect: to.fullPath // 将跳转的路由path作为参数，登录成功后跳转到该路由
+          }
+        })
+      } else {
+        next()
+      }
     } else {
       next({
         path: '/login',

@@ -1,7 +1,7 @@
 <template>
   <router-link tag="div" :to="{name:'detail',params:{id:item.id}}" v-if="item">
           <div class="article-item">
-            <img class="article-item-img" :src="item.author.avatar_url">
+            <img class="article-item-img" src="../assets/default.png" :src="item.author.avatar_url">
             <div class="article-item-detail">
                 <h3>
                   <span v-if="!hideTag">

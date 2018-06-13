@@ -24,6 +24,9 @@ export default {
       isLoading: false
     }
   },
+  created() {
+    console.log(this.tab)
+  },
   components: {
     loading,
     newsItem
@@ -48,11 +51,11 @@ export default {
           this.$nextTick(() => {
             if (!this.scroll) {
               this.scroll = new BScroll(this.$refs.loadmore, { click: true })
-              this.scroll.on('scrollStart', pos => {
-                console.log(pos)
-                // this.$spin.show()
-                this.isLoading = true
-              })
+              // this.scroll.on('scrollStart', pos => {
+              //   console.log(pos)
+              //   // this.$spin.show()
+              //   this.isLoading = true
+              // })
               this.scroll.on('touchEnd', pos => {
                 this.isLoading = false
                 // 上拉加载
@@ -61,6 +64,7 @@ export default {
                   this.initShow()
                 }
                 if (pos.y > 50) {
+                  // this.isLoading = true
                   this.pagenum = 1
                   this.initShow(true)
                 }

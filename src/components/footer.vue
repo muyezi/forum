@@ -3,7 +3,7 @@
     <yd-backtop></yd-backtop>
     <nav>
       <ul class="header-nav">
-        <router-link :to="{path:'/'}" tag="li">
+        <router-link :to="{name:'Home'}" tag="li">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-home"></use>
           </svg>
@@ -108,6 +108,9 @@ export default {
     color: #fff;
     text-align: center;
   }
+  // .router-link-active {
+  //   color: $mcolor;
+  // }
   .router-link-exact-active {
     color: #333;
   }

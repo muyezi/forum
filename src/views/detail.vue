@@ -1,35 +1,7 @@
 <template>
   <div class="detail-content article">
-      <div v-if="article.author" class="article-item">
-        <img class="article-item-img" v-if="article.author" :src="article.author.avatar_url">
-        <div class="article-item-detail">
-            <h3>
-              <span class="put-top" v-if="article.top || article.good">
-                {{article.top ? '置顶':'精华'}}
-              </span>
-              <span class="put-top" v-else>{{tabTag[article.tab]}}</span>
-              {{article.title}}
-            </h3>
-            <div class="article-item-info">
-                <div class="time">{{article.create_at|dateDistance}}</div>
-                <div class="writer" v-if="article.author">
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-bi"></use>
-                  </svg>
-                  {{article.author.loginname}}
-                </div>
-            </div>
-            <div class="article-item-info">
-                <div class="time">{{article.last_reply_at|dateDistance}}</div>
-                <div class="browse">
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-browse"></use>
-                  </svg>
-                  {{article.visit_count}}
-                </div>
-            </div>
-        </div>
-      </div>
+      <news-item v-if="article.author" :hideTag="true" :item="article"></news-item>
+      
       <div class="article-inner markdown-body">
         <h2>{{article.titile}}</h2>
         <div class="article-content" v-html="article.content"></div>
@@ -42,7 +14,7 @@
         </div>
         <div class="article-comment">
           <div class="article-comment-box" v-for="(item,index) in replies" :key="index">
-            <img :src="item.author.avatar_url">
+            <img src="../assets/default.png" :src="item.author.avatar_url">
             <div class="article-comment-box-floor">{{index}}楼</div>
             <div class="article-comment-box-detail">
               <div class="article-comment-box-name">
@@ -65,9 +37,9 @@
           </div>
         </div>
       </div>
-      <div class="article-say">
+      <div v-if="user&&article.author" class="article-say">
         <div class="article-say-photo">
-          <img :src="user.avatar_url">
+          <img src="../assets/default.png" :src="user.avatar_url">
         </div>
         <textarea ref="replyTextarea" v-model="content" name="" id="" cols="30" rows="10" placeholder="朕说两句..."></textarea>
         <div class="article-say-btn" @click="submitReplies">
@@ -76,11 +48,16 @@
           </svg>
         </div>
       </div>
+      <div v-else  class="article-say-unlogin">
+          还未登录，马上去
+          <span class="btnToLogin" @click="toLogin">登录</span>
+      </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import newsItem from '../components/news-item'
 export default {
   name: 'detail',
   data() {
@@ -91,6 +68,9 @@ export default {
       reply_id: '', // 回复评论id
       topic_id: '' // 文章id
     }
+  },
+  components: {
+    newsItem
   },
   computed: mapState(['user']),
   created() {
@@ -103,6 +83,14 @@ export default {
     })
   },
   methods: {
+    toLogin() {
+      this.$router.replace({
+        name: 'login',
+        query: {
+          redirect: this.$route.fullPath
+        }
+      })
+    },
     // 提价评论
     submitReplies() {
       this.$http
@@ -115,17 +103,21 @@ export default {
           { direct: true }
         )
         .then(res => {
-          console.log('res', res)
+          let con = ''
+          let conArr = this.content.split(' ')
+          if (conArr.length > 1) {
+            let con = `<div class="markdown-text"><p><a href="/user/${
+              conArr[0]
+            }">${conArr[0]}</a> ${conArr[1]}</p></div>`
+          } else {
+            let con = `<div class="markdown-text"><p>${this.content}</p></div>`
+          }
           let newReplies = {
             author: {
               loginname: this.user.loginname,
               avatar_url: this.user.avatar_url
             },
-            content: `<div class="markdown-text"><p><a href="/user/${
-              this.content.split(' ')[0]
-            }">${this.content.split(' ')[0]}</a> ${
-              this.content.split(' ')[1]
-            }</p></div>`,
+            content: con,
             create_at: new Date(),
             id: res.reply_id,
             is_uped: false,
@@ -300,6 +292,23 @@ export default {
     width: 1rem;
     font-size: 0.4rem;
     color: #666;
+  }
+}
+.article-say-unlogin {
+  position: fixed;
+  z-index: 99;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  text-align: center;
+  padding: 0.1rem;
+  .btnToLogin {
+    display: inline-block;
+    padding: 0.05rem 0.2rem;
+    border: 1px solid $mcolor;
+    border-radius: 4px;
+    margin-left: 5px;
   }
 }
 </style>

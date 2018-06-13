@@ -1,19 +1,31 @@
 <template>
   <div class="header-top">
-    <a class="back" href="javascript:history.go(-1)">
+    <span class="back" @click="gobanck">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-back"></use>
       </svg>
-    </a>{{$route.meta.name}}
+    </span>{{$route.meta.name}}
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      prevPath: '/'
+    }
+  },
   name: 'headerTop',
   props: {
     msg: String
-  }
+  },
+  methods: {
+    gobanck() {
+      console.log(this.$router)
+      this.$router.go(-1)
+    }
+  },
+  created() {}
 }
 </script>
 

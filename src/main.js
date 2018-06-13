@@ -59,7 +59,9 @@ Object.keys(allFilter).forEach(key => {
 })
 
 store.commit('setUser')
-store.dispatch('getMsg')
+if (store.state.user) {
+  store.dispatch('getMsg')
+}
 
 new Vue({
   router,

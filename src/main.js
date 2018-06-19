@@ -41,9 +41,12 @@ import {
   Spin
 } from 'iview'
 Vue.component(Spin.name, Spin)
+import {
+  setDefaultImg
+} from './until'
 
 
-// Vue.config.productionTip = false
+Vue.prototype.setDefaultImg = setDefaultImg
 Vue.prototype.$http = http
 Vue.prototype.$spin = Spin
 Vue.prototype.tabTag = tabTag

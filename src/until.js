@@ -24,3 +24,8 @@ export let tabTag = {
   job: '招聘',
   dev: '测试',
 }
+
+// 设置默认图片
+export let setDefaultImg = function (e) {
+  e.target.src = require('./assets/default.png')
+}

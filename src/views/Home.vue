@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <vheader></vheader>
     <loading :show="isLoading"></loading>
     <div class="loadmore-wrap"  ref="loadmore">
         <div class="article-item-wrap">
@@ -13,6 +14,8 @@
 import loading from '../components/loading/loading.vue'
 import BScroll from 'better-scroll'
 import newsItem from '../components/news-item'
+import vheader from '@/components/header.vue'
+
 export default {
   name: 'home',
   data() {
@@ -24,10 +27,8 @@ export default {
       isLoading: false
     }
   },
-  created() {
-    console.log(this.tab)
-  },
   components: {
+    vheader,
     loading,
     newsItem
   },

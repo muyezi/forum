@@ -14,7 +14,7 @@
         </div>
         <div class="article-comment">
           <div class="article-comment-box" v-for="(item,index) in replies" :key="index">
-            <img src="../assets/default.png" :src="item.author.avatar_url">
+            <img @error="setDefaultImg" :src="item.author.avatar_url">
             <div class="article-comment-box-floor">{{index}}楼</div>
             <div class="article-comment-box-detail">
               <div class="article-comment-box-name">
@@ -39,7 +39,7 @@
       </div>
       <div v-if="user&&article.author" class="article-say">
         <div class="article-say-photo">
-          <img src="../assets/default.png" :src="user.avatar_url">
+          <img @error="setDefaultImg" :src="user.avatar_url">
         </div>
         <textarea ref="replyTextarea" v-model="content" name="" id="" cols="30" rows="10" placeholder="朕说两句..."></textarea>
         <div class="article-say-btn" @click="submitReplies">
@@ -58,6 +58,7 @@
 <script>
 import { mapState } from 'vuex'
 import newsItem from '../components/news-item'
+import { getTopic, toReplies, toSetUps } from '../api/detail'
 export default {
   name: 'detail',
   data() {
@@ -75,7 +76,8 @@ export default {
   computed: mapState(['user']),
   created() {
     this.$spin.show()
-    this.$http.get('topic/' + this.$route.params.id).then(res => {
+    getTopic(this.$route.params.id).then(res => {
+      console.log(res)
       this.$spin.hide()
       this.article = res
       this.replies = this.article.replies
@@ -93,41 +95,35 @@ export default {
     },
     // 提价评论
     submitReplies() {
-      this.$http
-        .post(
-          `topic/${this.topic_id}/replies`,
-          {
-            content: this.content,
-            reply_id: this.reply_id
+      toReplies(this.topic_id, {
+        content: this.content,
+        reply_id: this.reply_id
+      }).then(res => {
+        let con = ''
+        let conArr = this.content.split(' ')
+        if (conArr.length > 1) {
+          let con = `<div class="markdown-text"><p><a href="/user/${
+            conArr[0]
+          }">${conArr[0]}</a> ${conArr[1]}</p></div>`
+        } else {
+          let con = `<div class="markdown-text"><p>${this.content}</p></div>`
+        }
+        let newReplies = {
+          author: {
+            loginname: this.user.loginname,
+            avatar_url: this.user.avatar_url
           },
-          { direct: true }
-        )
-        .then(res => {
-          let con = ''
-          let conArr = this.content.split(' ')
-          if (conArr.length > 1) {
-            let con = `<div class="markdown-text"><p><a href="/user/${
-              conArr[0]
-            }">${conArr[0]}</a> ${conArr[1]}</p></div>`
-          } else {
-            let con = `<div class="markdown-text"><p>${this.content}</p></div>`
-          }
-          let newReplies = {
-            author: {
-              loginname: this.user.loginname,
-              avatar_url: this.user.avatar_url
-            },
-            content: con,
-            create_at: new Date(),
-            id: res.reply_id,
-            is_uped: false,
-            reply_id: null,
-            ups: []
-          }
-          this.replies.push(newReplies)
-          this.article.reply_count++
-          this.content = ''
-        })
+          content: con,
+          create_at: new Date(),
+          id: res.reply_id,
+          is_uped: false,
+          reply_id: null,
+          ups: []
+        }
+        this.replies.push(newReplies)
+        this.article.reply_count++
+        this.content = ''
+      })
     },
     // 点击回复他人评论
     repliesOthers(item) {
@@ -137,26 +133,21 @@ export default {
     },
     // 点赞
     setUps(name, id, ind) {
-      // console.log(
-      //   name + ',' + this.user.loginname + ',' + ind + ',' + this.user.id
-      // )
       if (name === this.user.loginname) {
         this.$dialog.toast({ mes: '亲，不能给自己点赞哦！', timeout: 1500 })
         return
       }
-      this.$http
-        .post(`reply/${id}/ups`, {}, { direct: true })
-        .then(({ action }) => {
-          let ups = this.replies[ind].ups
-          let id = this.user.id
-          if (action === 'up') {
-            this.replies[ind].ups.push(id)
-          }
-          if (action === 'down') {
-            this.replies[ind].ups = ups.filter(v => v != id)
-          }
-          console.log(this.replies[ind].ups)
-        })
+      ttoSetUps(id).then(({ action }) => {
+        let ups = this.replies[ind].ups
+        let id = this.user.id
+        if (action === 'up') {
+          this.replies[ind].ups.push(id)
+        }
+        if (action === 'down') {
+          this.replies[ind].ups = ups.filter(v => v != id)
+        }
+        console.log(this.replies[ind].ups)
+      })
     }
   }
 }

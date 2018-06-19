@@ -3,26 +3,26 @@
     <yd-backtop></yd-backtop>
     <nav>
       <ul class="header-nav">
-        <router-link :to="{name:'Home'}" tag="li">
+        <router-link :to="{path:'/index'}" tag="li">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-home"></use>
           </svg>
           <p>首页</p>
         </router-link>
-        <router-link :to="{name:'message'}" tag="li">
+        <router-link :to="{name:'message'}" tag="li" exact>
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-msg"></use>
           </svg>
           <span class="msg-num" v-if="hasnotReadNum!=0">{{hasnotReadNum}}</span>
           <p>消息</p>
         </router-link>
-        <router-link :to="{name:'publish'}" tag="li">
+        <router-link :to="{name:'publish'}" tag="li" exact>
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-publish"></use>
           </svg>
           <p>发表</p>
         </router-link>
-        <router-link :to="{name:'user'}" tag="li">
+        <router-link :to="{name:'user'}" tag="li" exact>
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-mine"></use>
           </svg>
@@ -108,9 +108,9 @@ export default {
     color: #fff;
     text-align: center;
   }
-  // .router-link-active {
-  //   color: $mcolor;
-  // }
+  .router-link-active {
+    color: $mcolor;
+  }
   .router-link-exact-active {
     color: #333;
   }

@@ -2,7 +2,7 @@
   <div class="detail-content">
     <div class="user">
       <div class="user-info">
-        <div class="user-photo"><img :src="user.avatar_url"></div>
+        <div class="user-photo"><img @error="setDefaultImg" :src="user.avatar_url"></div>
         <ul class="user-list">
           <li>
             <svg class="icon" aria-hidden="true">

@@ -12,15 +12,21 @@
 </template>
 
 <script>
-import { mapState } from '../store'
+import { mapState } from 'vuex'
 export default {
+  name: 'login',
   data() {
     return {
       userToken: '',
       isDisabled: false
     }
   },
-  // computed: mapState(['accesstoken']),
+  computed: mapState(['accesstoken']),
+  created() {
+    if (this.accesstoken) {
+      this.$router.push({ path: '/index/all' })
+    }
+  },
   methods: {
     submit() {
       console.log(this.$route.query.redirect)
@@ -38,10 +44,8 @@ export default {
         .post('/accesstoken', { accesstoken: this.userToken }, { direct: true })
         .then(res => {
           this.isDisabled = false
-          // console.log(res)
           localStorage.setItem('user', JSON.stringify(res))
           localStorage.setItem('accesstoken', this.userToken)
-          // console.log(this.route.query.redirect)
           this.$store.commit('setUser')
           this.$store.dispatch('getMsg')
           if (this.$route.query.redirect) {

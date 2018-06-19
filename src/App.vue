@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <vheader v-if="$route.name==='Home'"></vheader>
-    <vheaderTop v-else></vheaderTop>
+    <vheaderTop v-if="$route.name!=='Home'"></vheaderTop>
+    <keep-alive :exclude="['login','detail']">
     <router-view/>
+    </keep-alive>
     <vfooter v-if="!$route.meta.hideFooter"></vfooter>
   </div>
 </template>

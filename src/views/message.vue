@@ -4,7 +4,7 @@
       <yd-tab active-color='#333' class="user-tab">
         <yd-tab-panel :label="'未读消息('+hasnotReadNum+')'">
             <div class="article-item" v-for="(item,index) in hasnot_read_messages" :key="index">
-            <img class="article-item-img" :src="item.author.avatar_url">
+            <img class="article-item-img" @error="setDefaultImg" :src="item.author.avatar_url">
             <div class="article-item-detail">
                 <div class="article-item-msg-author">{{item.author.loginname}} <span class="msg-time">{{item.create_at|dateDistance}}</span></div>
                 <h3 class="article-item-msg-title">在话题<router-link tag="span" :to="{name:'detail',params:{id:item.topic.id}}">{{item.topic.title}}</router-link>回复了你!</h3>
@@ -14,7 +14,7 @@
         </yd-tab-panel>
         <yd-tab-panel  :label="'已读消息('+hasReadNum+')'">
           <div class="article-item" v-for="(item,index) in has_read_messages" :key="index">
-            <img class="article-item-img" :src="item.author.avatar_url">
+            <img class="article-item-img"  @error="setDefaultImg" :src="item.author.avatar_url">
             <div class="article-item-detail">
                 <div class="article-item-msg-author">{{item.author.loginname}} <span class="msg-time">{{item.create_at|dateDistance}}</span></div>
                 <h3 class="article-item-msg-title">在话题<router-link tag="span" :to="{name:'detail',params:{id:item.topic.id}}">{{item.topic.title}}</router-link>回复了你!</h3>

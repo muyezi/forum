@@ -1,6 +1,6 @@
 <template>
     <div class="article-comment-box">
-      <img :src="item.author.avatar_url || ''">
+      <img @error="setDefaultImg" :src="item.author.avatar_url">
       <div class="article-comment-box-floor">{{index}}楼</div>
       <div class="article-comment-box-detail">
         <div class="article-comment-box-name">

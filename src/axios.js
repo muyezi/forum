@@ -31,12 +31,14 @@ http.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 http.interceptors.response.use(function (response) {
+    console.log('000000')
     if (response.config.direct) {
       return response.data
     }
+    console.log('1111')
+    console.log('response.data.data', response.data.data)
     // 对响应数据做点什么
-    var res = response.data
-    return res.data;
+    return response.data.data;
   },
   function (error) {
     // 对响应错误做点什么
